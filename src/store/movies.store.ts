@@ -1,3 +1,5 @@
+// src/store/movies.store.ts
+
 import type { Movie } from "@/model/movie.model";
 import { defineStore } from 'pinia';
 import axios from '@/api/client-http';
@@ -7,7 +9,7 @@ export const useMoviesStore = defineStore('movies', {
     listMovies: [] as Movie[],
   }),
   actions: {
-    async getMovies(searchTerm = '') {
+    async getMovies(searchTerm = 'Batman') {
       try {
         const response = await axios.get('/', {
           params: { s: searchTerm }
@@ -27,6 +29,9 @@ export const useMoviesStore = defineStore('movies', {
         console.error('Error fetching movie details:', error);
         throw error;
       }
+    },
+    async searchMovies(searchTerm: string) {
+      await this.getMovies(searchTerm);
     }
   }
 });
