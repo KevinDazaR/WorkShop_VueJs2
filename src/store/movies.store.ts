@@ -10,9 +10,10 @@ export const useMoviesStore = defineStore('movies', {
     currentPage: 1,
     totalResults: 0,
     resultsPerPage: 8,
+    searchTerm: '', // Añadido para mantener el término de búsqueda actual
   }),
   actions: {
-    async getMovies(searchTerm = 'Batman', page = 1) {
+    async getMovies(searchTerm = '', page = 1) {
       try {
         const response = await axios.get('/', {
           params: {
@@ -23,6 +24,7 @@ export const useMoviesStore = defineStore('movies', {
         this.listMovies = response.data.Search || [];
         this.totalResults = response.data.totalResults || 0;
         this.currentPage = page;
+        this.searchTerm = searchTerm; // Actualiza el término de búsqueda actual
       } catch (error) {
         console.error('Error fetching movies:', error);
       }
