@@ -7,14 +7,22 @@ import axios from '@/api/client-http';
 export const useMoviesStore = defineStore('movies', {
   state: () => ({
     listMovies: [] as Movie[],
+    currentPage: 1,
+    totalResults: 0,
+    resultsPerPage: 8,
   }),
   actions: {
-    async getMovies(searchTerm = 'Batman') {
+    async getMovies(searchTerm = 'Batman', page = 1) {
       try {
         const response = await axios.get('/', {
-          params: { s: searchTerm }
+          params: {
+            s: searchTerm,
+            page: page
+          }
         });
         this.listMovies = response.data.Search || [];
+        this.totalResults = response.data.totalResults || 0;
+        this.currentPage = page;
       } catch (error) {
         console.error('Error fetching movies:', error);
       }
@@ -31,7 +39,7 @@ export const useMoviesStore = defineStore('movies', {
       }
     },
     async searchMovies(searchTerm: string) {
-      await this.getMovies(searchTerm);
+      await this.getMovies(searchTerm, 1); // Reset to first page on new search
     }
   }
 });
